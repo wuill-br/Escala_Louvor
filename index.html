@@ -1,3 +1,9 @@
+Pular para o conteúdo
+Histórico de chats
+
+
+Você disse:
+adicione mais dois nomes de vocal a esse codigo 
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -148,7 +154,7 @@
         const dia = d.getDate().toString().padStart(2, '0');
         const mes = (d.getMonth() + 1).toString().padStart(2, '0');
         const ano = d.getFullYear().toString().slice(-2);
-        const opcao = `${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`;
+        const opcao = ${dia}/${mes}/${ano}-${nomesDias[d.getDay()]};
         const option = document.createElement('option');
         option.value = opcao;
         option.textContent = opcao;
@@ -158,6 +164,301 @@
 
     const musicos = ["", "Jouci", "Daniel", "Tony","Lucas", "Anselmo", "Wuillian", "Joao", "Nikson", "Gabriel", "Wlademir"];
     const vocais = ["", "Luiza", "Gabriela", "Vitoria", "Bruno", "Isaque"];
+
+    function preencherSelects(className, nomes, context=document) {
+      context.querySelectorAll(select.${className}).forEach(select => {
+        select.innerHTML = '';
+        nomes.forEach(nome => {
+          const option = document.createElement('option');
+          option.value = nome;
+          option.textContent = nome;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    preencherSelects('musico', musicos);
+    preencherSelects('vocal', vocais);
+
+    function criarBlocoEscala() {
+      const data = document.getElementById('data').value;
+      const musicosSelecionados = Array.from(document.querySelectorAll('select.musico')).map(s => s.value);
+      const vocaisSelecionados = Array.from(document.querySelectorAll('select.vocal')).map(s => s.value);
+
+      const div = document.createElement('div');
+      div.classList.add('container');
+
+      const h3 = document.createElement('h3');
+      h3.textContent = Escala: ${data};
+      div.appendChild(h3);
+
+      const row = document.createElement('div');
+      row.classList.add('row');
+
+      const col1 = document.createElement('div');
+      col1.classList.add('column');
+      col1.innerHTML = '<label>Músicos</label>';
+      musicosSelecionados.forEach(nome => {
+        if (nome) {
+          const span = document.createElement('div');
+          span.className = nome ${nome};
+          span.textContent = nome;
+          col1.appendChild(span);
+        }
+      });
+
+      const col2 = document.createElement('div');
+      col2.classList.add('column');
+      col2.innerHTML = '<label>Vocal</label>';
+      vocaisSelecionados.forEach(nome => {
+        if (nome) {
+          const span = document.createElement('div');
+          span.className = nome ${nome};
+          span.textContent = nome;
+          col2.appendChild(span);
+        }
+      });
+
+      row.appendChild(col1);
+      row.appendChild(col2);
+      div.appendChild(row);
+
+      return div;
+    }
+
+    function adicionarEscala() {
+      const bloco = criarBlocoEscala();
+      document.getElementById('resultados').appendChild(bloco);
+    }
+
+    async function exportarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const escalas = document.querySelectorAll('#resultados .container');
+
+      for (let i = 0; i < escalas.length; i++) {
+        const canvas = await html2canvas(escalas[i]);
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        if (i > 0) doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      }
+
+      doc.save('Escala_Louvor.pdf');
+    }
+
+    async function exportarJPG() {
+      const escalas = document.querySelectorAll('#resultados .container');
+      const tempDiv = document.createElement('div');
+      escalas.forEach(el => tempDiv.appendChild(el.cloneNode(true)));
+      tempDiv.style.backgroundColor = 'white';
+      tempDiv.style.padding = '20px';
+      document.body.appendChild(tempDiv);
+
+      const canvas = await html2canvas(tempDiv);
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/jpeg');
+      link.download = 'Escala_Louvor.jpg';
+      link.click();
+
+      document.body.removeChild(tempDiv);
+    }
+  </script>
+</body>
+</html>
+O ChatGPT disse:
+Para adicionar mais dois nomes de vocal ao seu código, basta:
+
+Incluir os nomes no array vocais no script JavaScript.
+
+(Opcional) Adicionar estilos personalizados para esses nomes na seção CSS, caso deseje que apareçam com cores específicas.
+
+✅ 1. Atualize o array vocais:
+Encontre esta parte no seu código:
+
+const vocais = ["", "Luiza", "Gabriela", "Vitoria", "Bruno", "Isaque"];
+E adicione mais dois nomes, por exemplo Camila e Rafaela:
+
+const vocais = ["", "Luiza", "Gabriela", "Vitoria", "Bruno", "Isaque", "Camila", "Rafaela"];
+✅ 2. (Opcional) Adicione estilos para os novos nomes:
+Se quiser que Camila e Rafaela tenham cores próprias na escala, adicione isso no CSS, junto com os demais:
+
+.nome.Camila { background-color: #ff8c00; color: white; }
+.nome.Rafaela { background-color: #4b0082; color: white; }
+Adicione essas linhas abaixo da última linha de estilo de .nome:
+
+.nome.Isaque { background-color: #00ced1; color: black; }
+Depois disso, os dois novos nomes aparecerão nas opções de vocal e serão renderizados corretamente na escala com estilos únicos. Se quiser, posso te ajudar a personalizar mais nomes ou funcionalidades.
+
+Você disse:
+adicione ao codigo e me devolva completo com os nomes em vocais : Viviane e Beatriz
+O ChatGPT disse:
+Claro! Aqui está o código completo, já com os nomes Viviane e Beatriz adicionados à lista de vocais, incluindo seus estilos personalizados no CSS:
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala do Ministério de Louvor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .column {
+      flex: 1 1 100%;
+    }
+    @media (min-width: 600px) {
+      .column {
+        flex: 1;
+      }
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+    .nome {
+      padding: 6px;
+      margin-bottom: 4px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+      font-size: 0.9em;
+    }
+    .nome.Wlademir { background-color: #B0C4DE; }
+    .nome.Jouci { background-color: #6a5acd; }
+    .nome.Daniel { background-color: #4682b4; }
+    .nome.Tony { background-color: #8b0000; }
+    .nome.Anselmo { background-color: #2e8b57; }
+    .nome.Wuillian { background-color: #b8860b; }
+    .nome.Joao { background-color: #d2691e; }
+    .nome.Lucas { background-color: #ffa500; }
+    .nome.Nikson { background-color: #20b2aa; }
+    .nome.Gabriel { background-color: #dc143c; }
+    .nome.Luiza { background-color: #8a2be2; }
+    .nome.Gabriela { background-color: #ff69b4; }
+    .nome.Vitoria { background-color: #7fffd4; color: black; }
+    .nome.Bruno { background-color: #ffa07a; color: black; }
+    .nome.Isaque { background-color: #00ced1; color: black; }
+    .nome.Viviane { background-color: #9acd32; color: black; }
+    .nome.Beatriz { background-color: #ff1493; }
+    footer {
+      text-align: center;
+      margin: 30px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    footer button {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formulario">
+    <h1>Escala do Ministerio de Louvor</h1>
+    <label for="data">Selecionar Data:</label>
+    <select id="data"></select>
+
+    <div class="row">
+      <div class="column">
+        <label>Músicos</label>
+        <select class="musico"></select>
+        <select class="musico"></select>
+        <select class="musico"></select>
+        <select class="musico"></select>
+        <select class="musico"></select>
+      </div>
+      <div class="column">
+        <label>Vocal</label>
+        <select class="vocal"></select>
+        <select class="vocal"></select>
+        <select class="vocal"></select>
+        <select class="vocal"></select>
+        <select class="vocal"></select>
+      </div>
+    </div>
+    <div class="actions">
+      <button onclick="adicionarEscala()">➕ Adicionar</button>
+    </div>
+  </div>
+
+  <div id="resultados"></div>
+
+  <footer>
+    <button onclick="exportarPDF()">📄 Exportar PDF</button>
+    <button onclick="exportarJPG()">🖼️ Exportar JPG</button>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const dias = [2, 4, 0];
+    const nomesDias = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+    const hoje = new Date();
+    const fim = new Date('2025-12-31');
+    const selectData = document.getElementById('data');
+
+    for (let d = new Date(hoje); d <= fim; d.setDate(d.getDate() + 1)) {
+      if (dias.includes(d.getDay())) {
+        const dia = d.getDate().toString().padStart(2, '0');
+        const mes = (d.getMonth() + 1).toString().padStart(2, '0');
+        const ano = d.getFullYear().toString().slice(-2);
+        const opcao = `${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`;
+        const option = document.createElement('option');
+        option.value = opcao;
+        option.textContent = opcao;
+        selectData.appendChild(option);
+      }
+    }
+
+    const musicos = ["", "Jouci", "Daniel", "Tony","Lucas", "Anselmo", "Wuillian", "Joao", "Nikson", "Gabriel", "Wlademir"];
+    const vocais = ["", "Luiza", "Gabriela", "Vitoria", "Bruno", "Isaque", "Viviane", "Beatriz"];
 
     function preencherSelects(className, nomes, context=document) {
       context.querySelectorAll(`select.${className}`).forEach(select => {
