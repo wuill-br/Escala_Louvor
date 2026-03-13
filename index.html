@@ -157,17 +157,18 @@ const pessoas=[
 
 ]
 
-const iconesInstrumento={
-guitarra:"🎸",
-violao:"🎸",
-baixo:"🎸",
-teclado:"🎹",
-bateria:"🥁"
+const icones={
+guitarra:"fa-guitar",
+violao:"fa-guitar",
+baixo:"fa-guitar",
+teclado:"fa-keyboard",
+bateria:"fa-drum"
 }
 
 pessoas.forEach(p=>{
 
 const card=document.createElement("div")
+
 card.className="card"
 card.dataset.nome=p.nome
 card.dataset.tipo=p.tipo
@@ -176,7 +177,7 @@ let icon="fa-microphone"
 let cor=p.cor
 
 if(p.tipo==="musico"){
-icon="fa-guitar"
+icon=icones[p.instrumento]
 }
 
 card.innerHTML=`
@@ -227,6 +228,7 @@ html+=`<div class="tag" style="background:${cor}">${n}</div>`
 html+="</div>"
 
 bloco.innerHTML=html
+
 bloco.dataset.data=data
 bloco.dataset.musicos=mus.join(",")
 bloco.dataset.vocais=voc.join(",")
@@ -263,20 +265,21 @@ const data=e.dataset.data
 const mus=e.dataset.musicos.split(",")
 const voc=e.dataset.vocais.split(",")
 
-pdf.setFillColor(230,230,230)
-pdf.roundedRect(10,posY,190,80,10,10,"F")
+pdf.setFillColor(240,240,240)
+pdf.roundedRect(10,posY,190,80,8,8,"F")
 
+pdf.setTextColor(0,0,0)
 pdf.setFontSize(14)
 pdf.text(data,105,posY+10,{align:"center"})
 
-pdf.roundedRect(15,posY+15,80,60,6,6)
-pdf.roundedRect(105,posY+15,80,60,6,6)
+pdf.roundedRect(15,posY+15,80,60,4,4)
+pdf.roundedRect(105,posY+15,80,60,4,4)
 
 pdf.text("Músicos",55,posY+22,{align:"center"})
 pdf.text("Vocais",145,posY+22,{align:"center"})
 
-let y1=posY+30
-let y2=posY+30
+let yMus=posY+32
+let yVoc=posY+32
 
 mus.forEach(n=>{
 
@@ -286,14 +289,16 @@ const pessoa=pessoas.find(p=>p.nome===n)
 const rgb=hexToRgb(pessoa.cor)
 
 pdf.setFillColor(rgb.r,rgb.g,rgb.b)
-pdf.roundedRect(20,y1,70,10,3,3,"F")
+pdf.roundedRect(20,yMus,70,10,3,3,"F")
 
-const icon=iconesInstrumento[pessoa.instrumento] || "🎸"
+pdf.setFillColor(255,255,255)
+pdf.circle(24,yMus+5,2,"F")
 
 pdf.setTextColor(255,255,255)
-pdf.text(icon+" "+n,23,y1+7)
+pdf.setFontSize(11)
+pdf.text(n,55,yMus+7,{align:"center"})
 
-y1+=12
+yMus+=12
 
 })
 
@@ -305,12 +310,16 @@ const pessoa=pessoas.find(p=>p.nome===n)
 const rgb=hexToRgb(pessoa.cor)
 
 pdf.setFillColor(rgb.r,rgb.g,rgb.b)
-pdf.roundedRect(110,y2,70,10,3,3,"F")
+pdf.roundedRect(110,yVoc,70,10,3,3,"F")
+
+pdf.setFillColor(255,255,255)
+pdf.circle(114,yVoc+5,2,"F")
 
 pdf.setTextColor(255,255,255)
-pdf.text("🎤 "+n,113,y2+7)
+pdf.setFontSize(11)
+pdf.text(n,145,yVoc+7,{align:"center"})
 
-y2+=12
+yVoc+=12
 
 })
 
