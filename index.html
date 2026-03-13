@@ -69,10 +69,6 @@ cursor:pointer;
 font-size:15px;
 }
 
-button:hover{
-background:#1f5edb;
-}
-
 .whats{
 background:#25D366;
 }
@@ -161,18 +157,17 @@ const pessoas=[
 
 ]
 
-const icones={
-guitarra:"fa-guitar",
-violao:"fa-guitar",
-baixo:"fa-guitar",
-teclado:"fa-keyboard",
-bateria:"fa-drum"
+const iconesInstrumento={
+guitarra:"🎸",
+violao:"🎸",
+baixo:"🎸",
+teclado:"🎹",
+bateria:"🥁"
 }
 
 pessoas.forEach(p=>{
 
 const card=document.createElement("div")
-
 card.className="card"
 card.dataset.nome=p.nome
 card.dataset.tipo=p.tipo
@@ -181,7 +176,7 @@ let icon="fa-microphone"
 let cor=p.cor
 
 if(p.tipo==="musico"){
-icon=icones[p.instrumento]
+icon="fa-guitar"
 }
 
 card.innerHTML=`
@@ -232,7 +227,6 @@ html+=`<div class="tag" style="background:${cor}">${n}</div>`
 html+="</div>"
 
 bloco.innerHTML=html
-
 bloco.dataset.data=data
 bloco.dataset.musicos=mus.join(",")
 bloco.dataset.vocais=voc.join(",")
@@ -269,23 +263,37 @@ const data=e.dataset.data
 const mus=e.dataset.musicos.split(",")
 const voc=e.dataset.vocais.split(",")
 
-pdf.roundedRect(10,posY,190,80,6,6)
+pdf.setFillColor(230,230,230)
+pdf.roundedRect(10,posY,190,80,10,10,"F")
 
 pdf.setFontSize(14)
-pdf.text(data,15,posY+10)
+pdf.text(data,105,posY+10,{align:"center"})
 
-pdf.text("Músicos",15,posY+20)
-pdf.text("Vocais",110,posY+20)
+pdf.roundedRect(15,posY+15,80,60,6,6)
+pdf.roundedRect(105,posY+15,80,60,6,6)
 
-let yMus=posY+30
-let yVoc=posY+30
+pdf.text("Músicos",55,posY+22,{align:"center"})
+pdf.text("Vocais",145,posY+22,{align:"center"})
+
+let y1=posY+30
+let y2=posY+30
 
 mus.forEach(n=>{
 
 if(!n) return
 
-pdf.text(n,18,yMus+7)
-yMus+=12
+const pessoa=pessoas.find(p=>p.nome===n)
+const rgb=hexToRgb(pessoa.cor)
+
+pdf.setFillColor(rgb.r,rgb.g,rgb.b)
+pdf.roundedRect(20,y1,70,10,3,3,"F")
+
+const icon=iconesInstrumento[pessoa.instrumento] || "🎸"
+
+pdf.setTextColor(255,255,255)
+pdf.text(icon+" "+n,23,y1+7)
+
+y1+=12
 
 })
 
@@ -293,8 +301,16 @@ voc.forEach(n=>{
 
 if(!n) return
 
-pdf.text(n,113,yVoc+7)
-yVoc+=12
+const pessoa=pessoas.find(p=>p.nome===n)
+const rgb=hexToRgb(pessoa.cor)
+
+pdf.setFillColor(rgb.r,rgb.g,rgb.b)
+pdf.roundedRect(110,y2,70,10,3,3,"F")
+
+pdf.setTextColor(255,255,255)
+pdf.text("🎤 "+n,113,y2+7)
+
+y2+=12
 
 })
 
@@ -308,34 +324,39 @@ return pdf
 }
 
 function exportarPDF(){
-
-const pdf=gerarPDF()
-pdf.save("escala_louvor.pdf")
-
+gerarPDF().save("escala_louvor.pdf")
 }
 
 async function compartilharWhats(){
 
 const pdf=gerarPDF()
-
 const blob=pdf.output("blob")
-
 const file=new File([blob],"escala_louvor.pdf",{type:"application/pdf"})
 
 if(navigator.share){
 
 await navigator.share({
-
-title:"Escala Ministério de Louvor",
+title:"Escala Louvor",
 text:"Escala do ministério",
 files:[file]
-
 })
 
 }else{
 
 alert("Seu navegador não suporta compartilhamento direto")
 
+}
+
+}
+
+function hexToRgb(hex){
+
+const bigint=parseInt(hex.replace("#",""),16)
+
+return{
+r:(bigint>>16)&255,
+g:(bigint>>8)&255,
+b:bigint&255
 }
 
 }
