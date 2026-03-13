@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
 <meta charset="UTF-8">
@@ -16,8 +17,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#eef3ff,#ffffff);
-padding:15px;
+background:#f4f6fb;
+padding:20px;
 text-align:center;
 }
 
@@ -30,88 +31,106 @@ margin-top:15px;
 }
 
 .card{
+
 width:130px;
 height:140px;
+
 background:white;
-border-radius:14px;
+border-radius:12px;
+
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-box-shadow:0 4px 10px rgba(0,0,0,0.15);
+
 cursor:pointer;
+
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+
 border:3px solid transparent;
+
 }
 
 .card.selected{
-border:3px solid #2e7dff;
+border-color:#2e7dff;
 background:#eef4ff;
 }
 
 .card i{
-font-size:46px;
+font-size:40px;
 margin-bottom:10px;
 }
 
 .nome{
 font-weight:bold;
-font-size:15px;
 }
 
 button{
+
 margin-top:12px;
 padding:12px 22px;
+
 border:none;
+border-radius:10px;
+
 background:#2e7dff;
 color:white;
-border-radius:10px;
+
 cursor:pointer;
 font-size:15px;
+
 }
 
 .whats{
 background:#25D366;
 }
 
-.escalaBloco{
-border-radius:14px;
-padding:16px;
-margin:15px auto;
-max-width:500px;
-background:white;
-box-shadow:0 3px 8px rgba(0,0,0,0.15);
-}
-
-.linha{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-justify-content:center;
-margin-top:8px;
-}
-
-.tag{
-padding:7px 12px;
-border-radius:7px;
-color:white;
-font-size:14px;
-}
-
 select{
-font-size:18px;
 padding:10px;
+font-size:16px;
 margin-top:10px;
 border-radius:8px;
 }
 
+.escalaBloco{
+
+background:white;
+
+max-width:520px;
+margin:20px auto;
+
+padding:15px;
+
+border-radius:10px;
+
+box-shadow:0 3px 8px rgba(0,0,0,0.2);
+
+}
+
+.linha{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+justify-content:center;
+margin-top:6px;
+}
+
+.tag{
+padding:6px 10px;
+border-radius:6px;
+color:white;
+font-size:13px;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <h1>Escala Ministério de Louvor</h1>
 
-<label>Data:</label><br>
+<label>Data</label><br>
 <select id="data"></select>
 
 <h2>Músicos</h2>
@@ -130,6 +149,7 @@ border-radius:8px;
 </button>
 
 <h2>Escalas criadas</h2>
+
 <div id="resultados"></div>
 
 <script>
@@ -152,17 +172,19 @@ const pessoas=[
 {nome:"Viviane",tipo:"vocal",cor:"#ff7ac6"},
 {nome:"Beatriz",tipo:"vocal",cor:"#ff2f92"},
 {nome:"Karol",tipo:"vocal",cor:"#e84393"},
-{nome:"Bruno",tipo:"vocal",cor:"#6c7a89"},
+{nome:"Bruno",tipo:"vocal",cor:"#636e72"},
 {nome:"Isaque",tipo:"vocal",cor:"#636e72"}
 
 ]
 
 const icones={
+
 guitarra:"fa-guitar",
 violao:"fa-guitar",
 baixo:"fa-guitar",
 teclado:"fa-keyboard",
 bateria:"fa-drum"
+
 }
 
 pessoas.forEach(p=>{
@@ -170,18 +192,18 @@ pessoas.forEach(p=>{
 const card=document.createElement("div")
 
 card.className="card"
+
 card.dataset.nome=p.nome
 card.dataset.tipo=p.tipo
 
 let icon="fa-microphone"
-let cor=p.cor
 
 if(p.tipo==="musico"){
 icon=icones[p.instrumento]
 }
 
 card.innerHTML=`
-<i class="fa-solid ${icon}" style="color:${cor}"></i>
+<i class="fa-solid ${icon}" style="color:${p.cor}"></i>
 <div class="nome">${p.nome}</div>
 `
 
@@ -214,15 +236,21 @@ let html=`<h3>${data}</h3>`
 html+=`<b>Músicos</b><div class="linha">`
 
 mus.forEach(n=>{
+
 const cor=pessoas.find(p=>p.nome===n).cor
+
 html+=`<div class="tag" style="background:${cor}">${n}</div>`
+
 })
 
 html+=`</div><b>Vocais</b><div class="linha">`
 
 voc.forEach(n=>{
+
 const cor=pessoas.find(p=>p.nome===n).cor
+
 html+=`<div class="tag" style="background:${cor}">${n}</div>`
+
 })
 
 html+="</div>"
@@ -235,12 +263,8 @@ bloco.dataset.vocais=voc.join(",")
 
 document.getElementById("resultados").appendChild(bloco)
 
-resetarSelecao()
-
-}
-
-function resetarSelecao(){
 document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"))
+
 }
 
 function gerarPDF(){
@@ -248,32 +272,39 @@ function gerarPDF(){
 const {jsPDF}=window.jspdf
 const pdf=new jsPDF()
 
-const escalas=document.querySelectorAll(".escalaBloco")
-
 let posY=20
-let contador=0
 
-escalas.forEach(e=>{
-
-if(contador===3){
-pdf.addPage()
-posY=20
-contador=0
-}
+document.querySelectorAll(".escalaBloco").forEach(e=>{
 
 const data=e.dataset.data
-const mus=e.dataset.musicos.split(",")
-const voc=e.dataset.vocais.split(",")
+
+const mus=e.dataset.musicos.split(",").filter(n=>n)
+const voc=e.dataset.vocais.split(",").filter(n=>n)
+
+const linha=12
+
+const maior=Math.max(mus.length,voc.length)
+
+const alturaInterna=(maior*linha)+20
+const alturaTotal=alturaInterna+20
+
+if(posY+alturaTotal>280){
+
+pdf.addPage()
+posY=20
+
+}
 
 pdf.setFillColor(240,240,240)
-pdf.roundedRect(10,posY,190,80,8,8,"F")
+pdf.roundedRect(10,posY,190,alturaTotal,8,8,"F")
 
-pdf.setTextColor(0,0,0)
 pdf.setFontSize(14)
+pdf.setTextColor(0,0,0)
+
 pdf.text(data,105,posY+10,{align:"center"})
 
-pdf.roundedRect(15,posY+15,80,60,4,4)
-pdf.roundedRect(105,posY+15,80,60,4,4)
+pdf.roundedRect(15,posY+15,80,alturaInterna,4,4)
+pdf.roundedRect(105,posY+15,80,alturaInterna,4,4)
 
 pdf.text("Músicos",55,posY+22,{align:"center"})
 pdf.text("Vocais",145,posY+22,{align:"center"})
@@ -283,12 +314,12 @@ let yVoc=posY+32
 
 mus.forEach(n=>{
 
-if(!n) return
-
 const pessoa=pessoas.find(p=>p.nome===n)
+
 const rgb=hexToRgb(pessoa.cor)
 
 pdf.setFillColor(rgb.r,rgb.g,rgb.b)
+
 pdf.roundedRect(20,yMus,70,10,3,3,"F")
 
 pdf.setFillColor(255,255,255)
@@ -296,20 +327,21 @@ pdf.circle(24,yMus+5,2,"F")
 
 pdf.setTextColor(255,255,255)
 pdf.setFontSize(11)
+
 pdf.text(n,55,yMus+7,{align:"center"})
 
-yMus+=12
+yMus+=linha
 
 })
 
 voc.forEach(n=>{
 
-if(!n) return
-
 const pessoa=pessoas.find(p=>p.nome===n)
+
 const rgb=hexToRgb(pessoa.cor)
 
 pdf.setFillColor(rgb.r,rgb.g,rgb.b)
+
 pdf.roundedRect(110,yVoc,70,10,3,3,"F")
 
 pdf.setFillColor(255,255,255)
@@ -317,14 +349,14 @@ pdf.circle(114,yVoc+5,2,"F")
 
 pdf.setTextColor(255,255,255)
 pdf.setFontSize(11)
+
 pdf.text(n,145,yVoc+7,{align:"center"})
 
-yVoc+=12
+yVoc+=linha
 
 })
 
-posY+=90
-contador++
+posY+=alturaTotal+10
 
 })
 
@@ -333,21 +365,26 @@ return pdf
 }
 
 function exportarPDF(){
+
 gerarPDF().save("escala_louvor.pdf")
+
 }
 
 async function compartilharWhats(){
 
 const pdf=gerarPDF()
+
 const blob=pdf.output("blob")
-const file=new File([blob],"escala_louvor.pdf",{type:"application/pdf"})
+
+const file=new File([blob],"escala.pdf",{type:"application/pdf"})
 
 if(navigator.share){
 
 await navigator.share({
+
 title:"Escala Louvor",
-text:"Escala do ministério",
 files:[file]
+
 })
 
 }else{
@@ -363,37 +400,41 @@ function hexToRgb(hex){
 const bigint=parseInt(hex.replace("#",""),16)
 
 return{
+
 r:(bigint>>16)&255,
 g:(bigint>>8)&255,
 b:bigint&255
+
 }
 
 }
 
 const dias=[2,4,0]
-const nomesDias=['domingo','segunda','terça','quarta','quinta','sexta','sábado']
+
+const nomesDias=["domingo","segunda","terça","quarta","quinta","sexta","sábado"]
+
+const select=document.getElementById("data")
 
 const hoje=new Date()
-const fim=new Date('2026-12-31')
 
-const selectData=document.getElementById('data')
+const fim=new Date("2026-12-31")
 
 for(let d=new Date(hoje);d<=fim;d.setDate(d.getDate()+1)){
 
 if(dias.includes(d.getDay())){
 
-const dia=d.getDate().toString().padStart(2,'0')
-const mes=(d.getMonth()+1).toString().padStart(2,'0')
+const dia=d.getDate().toString().padStart(2,"0")
+const mes=(d.getMonth()+1).toString().padStart(2,"0")
 const ano=d.getFullYear().toString().slice(-2)
 
-const opcao=`${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`
+const texto=`${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`
 
-const option=document.createElement('option')
+const op=document.createElement("option")
 
-option.value=opcao
-option.textContent=opcao
+op.value=texto
+op.textContent=texto
 
-selectData.appendChild(option)
+select.appendChild(op)
 
 }
 
