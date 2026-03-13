@@ -1,267 +1,373 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escala do Ministério de Louvor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f2f2f2;
-      margin: 0;
-    }
-    h1 {
-      text-align: center;
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-    label {
-      font-weight: bold;
-    }
-    select {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      font-size: 1em;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto 20px;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .column {
-      flex: 1 1 100%;
-    }
-    @media (min-width: 600px) {
-      .column {
-        flex: 1;
-      }
-    }
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    button {
-      padding: 10px 15px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #333;
-      color: white;
-      cursor: pointer;
-    }
-    .nome {
-      padding: 6px;
-      margin-bottom: 4px;
-      border-radius: 5px;
-      font-weight: bold;
-      color: white;
-      font-size: 0.9em;
-    }
-    .nome.Wlademir { background-color: #B0C4DE; }
-    .nome.Jouci { background-color: #6a5acd; }
-    .nome.Daniel { background-color: #4682b4; }
-    .nome.Tony { background-color: #8b0000; }
-    .nome.Anselmo { background-color: #2e8b57; }
-    .nome.Wuillian { background-color: #b8860b; }
-    .nome.Joao { background-color: #d2691e; }
-    .nome.Lucas { background-color: #ffa500; }
-    .nome.Nikson { background-color: #20b2aa; }
-    .nome.Joab { background-color: #dc143c; }
-    .nome.Luiza { background-color: #8a2be2; }
-    .nome.Gabriela { background-color: #ff69b4; }
-    .nome.Vitoria { background-color: #7fffd4; color: black; }
-    .nome.Bruno { background-color: #ffa07a; color: black; }
-    .nome.Isaque { background-color: #00ced1; color: black; }
-    .nome.Viviane { background-color: #9acd32; color: black; }
-    .nome.Beatriz { background-color: #ff1493; }
-    .nome.Karol { background-color: #8B1BBF; }
-    footer {
-      text-align: center;
-      margin: 30px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    footer button {
-      margin: 5px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Escala Ministério de Louvor</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#eef3ff,#ffffff);
+padding:20px;
+text-align:center;
+}
+
+.grid{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+justify-content:center;
+margin-top:10px;
+}
+
+.card{
+
+width:110px;
+height:120px;
+background:white;
+border-radius:12px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+cursor:pointer;
+transition:0.2s;
+border:3px solid transparent;
+
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card.selected{
+border:3px solid #2e7dff;
+background:#eef4ff;
+}
+
+.card i{
+font-size:34px;
+margin-bottom:8px;
+}
+
+.nome{
+font-weight:bold;
+}
+
+.area{
+margin-top:30px;
+}
+
+button{
+margin-top:15px;
+padding:10px 25px;
+border:none;
+background:#2e7dff;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.lista{
+margin-top:10px;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="container" id="formulario">
-    <h1>Escala do Ministerio de Louvor</h1>
-    <label for="data">Selecionar Data:</label>
-    <select id="data"></select>
 
-    <div class="row">
-      <div class="column">
-        <label>Músicos</label>
-        <select class="musico"></select>
-        <select class="musico"></select>
-        <select class="musico"></select>
-        <select class="musico"></select>
-        <select class="musico"></select>
-      </div>
-      <div class="column">
-        <label>Vocal</label>
-        <select class="vocal"></select>
-        <select class="vocal"></select>
-        <select class="vocal"></select>
-        <select class="vocal"></select>
-        <select class="vocal"></select>
-      </div>
-    </div>
-    <div class="actions">
-      <button onclick="adicionarEscala()">➕ Adicionar</button>
-    </div>
-  </div>
+<h1>Escala Ministério de Louvor</h1>
 
-  <div id="resultados"></div>
+<label>Data:</label>
+<select id="data"></select>
 
-  <footer>
-    <button onclick="exportarPDF()">📄 Exportar PDF</button>
-    <button onclick="exportarJPG()">🖼️ Exportar JPG</button>
-  </footer>
+<h2>Músicos</h2>
+<div class="grid" id="musicos"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const dias = [2, 4, 0];
-    const nomesDias = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
-    const hoje = new Date();
-    const fim = new Date('2026-12-31');
-    const selectData = document.getElementById('data');
+<h2>Vocais</h2>
+<div class="grid" id="vocais"></div>
 
-    for (let d = new Date(hoje); d <= fim; d.setDate(d.getDate() + 1)) {
-      if (dias.includes(d.getDay())) {
-        const dia = d.getDate().toString().padStart(2, '0');
-        const mes = (d.getMonth() + 1).toString().padStart(2, '0');
-        const ano = d.getFullYear().toString().slice(-2);
-        const opcao = `${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`;
-        const option = document.createElement('option');
-        option.value = opcao;
-        option.textContent = opcao;
-        selectData.appendChild(option);
-      }
-    }
+<div class="area">
 
-    const musicos = ["", "Jouci", "Daniel", "Tony","Lucas", "Anselmo", "Wuillian", "Joao", "Nikson", "Joab", "Wlademir"];
-    const vocais = ["", "Luiza", "Gabriela", "Vitoria", "Bruno", "Isaque", "Viviane", "Beatriz","Karol"];
+<h3>Músicos selecionados</h3>
+<div id="listaMusicos" class="lista"></div>
 
-    function preencherSelects(className, nomes, context=document) {
-      context.querySelectorAll(`select.${className}`).forEach(select => {
-        select.innerHTML = '';
-        nomes.forEach(nome => {
-          const option = document.createElement('option');
-          option.value = nome;
-          option.textContent = nome;
-          select.appendChild(option);
-        });
-      });
-    }
+<h3>Vocais selecionados</h3>
+<div id="listaVocais" class="lista"></div>
 
-    preencherSelects('musico', musicos);
-    preencherSelects('vocal', vocais);
+<button onclick="adicionarEscala()">Adicionar Escala</button>
+<button onclick="exportarPDF()">Exportar PDF</button>
 
-    function criarBlocoEscala() {
-      const data = document.getElementById('data').value;
-      const musicosSelecionados = Array.from(document.querySelectorAll('select.musico')).map(s => s.value);
-      const vocaisSelecionados = Array.from(document.querySelectorAll('select.vocal')).map(s => s.value);
+</div>
 
-      const div = document.createElement('div');
-      div.classList.add('container');
+<div id="resultados"></div>
 
-      const h3 = document.createElement('h3');
-      h3.textContent = `Escala: ${data}`;
-      div.appendChild(h3);
+<script>
 
-      const row = document.createElement('div');
-      row.classList.add('row');
+const pessoas=[
 
-      const col1 = document.createElement('div');
-      col1.classList.add('column');
-      col1.innerHTML = '<label>Músicos</label>';
-      musicosSelecionados.forEach(nome => {
-        if (nome) {
-          const span = document.createElement('div');
-          span.className = `nome ${nome}`;
-          span.textContent = nome;
-          col1.appendChild(span);
-        }
-      });
+{nome:"Wuillian",tipo:"musico",instrumento:"guitarra",cor:"#2ecc71"},
+{nome:"Joao",tipo:"musico",instrumento:"guitarra",cor:"#e67e22"},
+{nome:"Wladmir",tipo:"musico",instrumento:"violao",cor:"#3498db"},
+{nome:"Jouci",tipo:"musico",instrumento:"guitarra",cor:"#9b59b6"},
+{nome:"Anselmo",tipo:"musico",instrumento:"teclado",cor:"#16a085"},
+{nome:"Nickson",tipo:"musico",instrumento:"bateria",cor:"#e74c3c"},
+{nome:"Joab",tipo:"musico",instrumento:"bateria",cor:"#ff7675"},
+{nome:"Tony",tipo:"musico",instrumento:"baixo",cor:"#34495e"},
+{nome:"Dani",tipo:"musico",instrumento:"baixo",cor:"#2980b9"},
 
-      const col2 = document.createElement('div');
-      col2.classList.add('column');
-      col2.innerHTML = '<label>Vocal</label>';
-      vocaisSelecionados.forEach(nome => {
-        if (nome) {
-          const span = document.createElement('div');
-          span.className = `nome ${nome}`;
-          span.textContent = nome;
-          col2.appendChild(span);
-        }
-      });
+{nome:"Luiza",tipo:"vocal"},
+{nome:"Gabriela",tipo:"vocal"},
+{nome:"Vitoria",tipo:"vocal"},
+{nome:"Bruno",tipo:"vocal"},
+{nome:"Isaque",tipo:"vocal"},
+{nome:"Viviane",tipo:"vocal"},
+{nome:"Beatriz",tipo:"vocal"},
+{nome:"Karol",tipo:"vocal"}
 
-      row.appendChild(col1);
-      row.appendChild(col2);
-      div.appendChild(row);
+]
 
-      return div;
-    }
+const icones={
 
-    function adicionarEscala() {
-      const bloco = criarBlocoEscala();
-      document.getElementById('resultados').appendChild(bloco);
-    }
+guitarra:"fa-guitar",
+violao:"fa-guitar",
+baixo:"fa-guitar",
+teclado:"fa-keyboard",
+bateria:"fa-drum"
 
-    async function exportarPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const escalas = document.querySelectorAll('#resultados .container');
+}
 
-      for (let i = 0; i < escalas.length; i++) {
-        const canvas = await html2canvas(escalas[i]);
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = doc.getImageProperties(imgData);
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+const coresMicrofone=[
+"#ff7675","#fd79a8","#74b9ff","#55efc4",
+"#ffeaa7","#a29bfe","#fab1a0","#00cec9"
+]
 
-        if (i > 0) doc.addPage();
-        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      }
+const coresPDF={
 
-      doc.save('Escala_Louvor.pdf');
-    }
+"Wuillian":[144,238,144],
+"Joao":[255,165,0],
+"Wladmir":[173,216,230],
+"Jouci":[186,85,211],
+"Anselmo":[60,179,113],
+"Nickson":[255,99,71],
+"Joab":[255,105,180],
+"Tony":[139,0,0],
+"Dani":[70,130,180]
 
-    async function exportarJPG() {
-      const escalas = document.querySelectorAll('#resultados .container');
-      const tempDiv = document.createElement('div');
-      escalas.forEach(el => tempDiv.appendChild(el.cloneNode(true)));
-      tempDiv.style.backgroundColor = 'white';
-      tempDiv.style.padding = '20px';
-      document.body.appendChild(tempDiv);
+}
 
-      const canvas = await html2canvas(tempDiv);
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/jpeg');
-      link.download = 'Escala_Louvor.jpg';
-      link.click();
+function corMicrofone(){
 
-      document.body.removeChild(tempDiv);
-    }
-  </script>
+return coresMicrofone[Math.floor(Math.random()*coresMicrofone.length)]
+
+}
+
+pessoas.forEach(p=>{
+
+const card=document.createElement("div")
+
+card.className="card"
+card.dataset.nome=p.nome
+card.dataset.tipo=p.tipo
+
+let icon="fa-microphone"
+let cor=corMicrofone()
+
+if(p.tipo==="musico"){
+
+icon=icones[p.instrumento]
+cor=p.cor
+
+}
+
+card.innerHTML=`
+<i class="fa-solid ${icon}" style="color:${cor}"></i>
+<div class="nome">${p.nome}</div>
+`
+
+card.onclick=()=>{
+
+card.classList.toggle("selected")
+atualizarLista()
+
+}
+
+if(p.tipo==="musico")
+document.getElementById("musicos").appendChild(card)
+else
+document.getElementById("vocais").appendChild(card)
+
+})
+
+function atualizarLista(){
+
+const mus=[]
+const voc=[]
+
+document.querySelectorAll(".card.selected").forEach(c=>{
+
+if(c.dataset.tipo==="musico")
+mus.push(c.dataset.nome)
+else
+voc.push(c.dataset.nome)
+
+})
+
+document.getElementById("listaMusicos").innerHTML=mus.join("<br>")
+document.getElementById("listaVocais").innerHTML=voc.join("<br>")
+
+}
+
+function adicionarEscala(){
+
+const data=document.getElementById("data").value
+
+const mus=[...document.querySelectorAll(".card.selected")]
+.filter(c=>c.dataset.tipo==="musico")
+.map(c=>c.dataset.nome)
+
+const voc=[...document.querySelectorAll(".card.selected")]
+.filter(c=>c.dataset.tipo==="vocal")
+.map(c=>c.dataset.nome)
+
+const div=document.createElement("div")
+
+div.className="escala"
+div.dataset.data=data
+div.dataset.musicos=mus.join(",")
+div.dataset.vocais=voc.join(",")
+
+document.getElementById("resultados").appendChild(div)
+
+resetarSelecao()
+
+}
+
+function resetarSelecao(){
+
+document.querySelectorAll(".card").forEach(c=>{
+
+c.classList.remove("selected")
+
+})
+
+document.getElementById("listaMusicos").innerHTML=""
+document.getElementById("listaVocais").innerHTML=""
+
+}
+
+function exportarPDF(){
+
+const {jsPDF}=window.jspdf
+const pdf=new jsPDF()
+
+const escalas=document.querySelectorAll(".escala")
+
+let posY=20
+let contador=0
+
+escalas.forEach(e=>{
+
+if(contador===3){
+
+pdf.addPage()
+posY=20
+contador=0
+
+}
+
+const data=e.dataset.data
+const mus=e.dataset.musicos.split(",")
+const voc=e.dataset.vocais.split(",")
+
+pdf.roundedRect(10,posY,190,80,5,5)
+
+pdf.setFontSize(14)
+pdf.text(data,15,posY+10)
+
+pdf.setFontSize(11)
+pdf.text("Músicos",15,posY+20)
+pdf.text("Vocal",110,posY+20)
+
+let yMus=posY+30
+let yVoc=posY+30
+
+mus.forEach(nome=>{
+
+if(!nome) return
+
+const cor=coresPDF[nome]||[200,200,200]
+
+pdf.setFillColor(...cor)
+pdf.roundedRect(15,yMus,70,10,2,2,'F')
+
+pdf.setTextColor(0)
+pdf.text(nome,18,yMus+7)
+
+yMus+=12
+
+})
+
+voc.forEach(nome=>{
+
+if(!nome) return
+
+pdf.setFillColor(220,220,255)
+pdf.roundedRect(110,yVoc,70,10,2,2,'F')
+
+pdf.text(nome,113,yVoc+7)
+
+yVoc+=12
+
+})
+
+posY+=90
+contador++
+
+})
+
+pdf.save("escala_louvor.pdf")
+
+}
+
+const dias=[2,4,0]
+const nomesDias=['domingo','segunda','terça','quarta','quinta','sexta','sábado']
+
+const hoje=new Date()
+const fim=new Date('2026-12-31')
+
+const selectData=document.getElementById('data')
+
+for(let d=new Date(hoje);d<=fim;d.setDate(d.getDate()+1)){
+
+if(dias.includes(d.getDay())){
+
+const dia=d.getDate().toString().padStart(2,'0')
+const mes=(d.getMonth()+1).toString().padStart(2,'0')
+const ano=d.getFullYear().toString().slice(-2)
+
+const opcao=`${dia}/${mes}/${ano}-${nomesDias[d.getDay()]}`
+
+const option=document.createElement('option')
+
+option.value=opcao
+option.textContent=opcao
+
+selectData.appendChild(option)
+
+}
+
+}
+
+</script>
+
 </body>
 </html>
