@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Escala Ministério de Louvor</title>
 
 <link rel="stylesheet"
@@ -14,35 +17,30 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 body{
 font-family:Arial;
 background:linear-gradient(135deg,#eef3ff,#ffffff);
-padding:20px;
+padding:15px;
 text-align:center;
 }
 
 .grid{
 display:flex;
 flex-wrap:wrap;
-gap:15px;
+gap:12px;
 justify-content:center;
-margin-top:10px;
+margin-top:15px;
 }
 
 .card{
-width:110px;
-height:120px;
+width:130px;
+height:140px;
 background:white;
-border-radius:12px;
+border-radius:14px;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 box-shadow:0 4px 10px rgba(0,0,0,0.15);
 cursor:pointer;
-transition:0.2s;
 border:3px solid transparent;
-}
-
-.card:hover{
-transform:scale(1.05);
 }
 
 .card.selected{
@@ -51,53 +49,63 @@ background:#eef4ff;
 }
 
 .card i{
-font-size:34px;
-margin-bottom:8px;
+font-size:46px;
+margin-bottom:10px;
 }
 
 .nome{
 font-weight:bold;
+font-size:15px;
 }
 
 button{
-margin-top:15px;
-padding:10px 25px;
+margin-top:12px;
+padding:12px 22px;
 border:none;
 background:#2e7dff;
 color:white;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
+font-size:15px;
 }
 
 button:hover{
 background:#1f5edb;
 }
 
-.escalaBloco{
+.whats{
+background:#25D366;
+}
 
-border-radius:12px;
-padding:15px;
+.escalaBloco{
+border-radius:14px;
+padding:16px;
 margin:15px auto;
 max-width:500px;
 background:white;
 box-shadow:0 3px 8px rgba(0,0,0,0.15);
-
 }
 
 .linha{
 display:flex;
-gap:10px;
+gap:8px;
 flex-wrap:wrap;
 justify-content:center;
+margin-top:8px;
 }
 
 .tag{
-
-padding:6px 10px;
-border-radius:6px;
+padding:7px 12px;
+border-radius:7px;
 color:white;
-font-size:13px;
+font-size:14px;
+}
 
+select{
+font-size:18px;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
 }
 
 </style>
@@ -107,7 +115,7 @@ font-size:13px;
 
 <h1>Escala Ministério de Louvor</h1>
 
-<label>Data:</label>
+<label>Data:</label><br>
 <select id="data"></select>
 
 <h2>Músicos</h2>
@@ -120,6 +128,10 @@ font-size:13px;
 
 <button onclick="adicionarEscala()">Adicionar Escala</button>
 <button onclick="exportarPDF()">Exportar PDF</button>
+
+<button class="whats" onclick="compartilharWhats()">
+<i class="fa-brands fa-whatsapp"></i> WhatsApp
+</button>
 
 <h2>Escalas criadas</h2>
 <div id="resultados"></div>
@@ -144,7 +156,6 @@ const pessoas=[
 {nome:"Viviane",tipo:"vocal",cor:"#ff7ac6"},
 {nome:"Beatriz",tipo:"vocal",cor:"#ff2f92"},
 {nome:"Karol",tipo:"vocal",cor:"#e84393"},
-
 {nome:"Bruno",tipo:"vocal",cor:"#6c7a89"},
 {nome:"Isaque",tipo:"vocal",cor:"#636e72"}
 
@@ -178,9 +189,7 @@ card.innerHTML=`
 <div class="nome">${p.nome}</div>
 `
 
-card.onclick=()=>{
-card.classList.toggle("selected")
-}
+card.onclick=()=>card.classList.toggle("selected")
 
 if(p.tipo==="musico")
 document.getElementById("musicos").appendChild(card)
@@ -235,14 +244,10 @@ resetarSelecao()
 }
 
 function resetarSelecao(){
-
-document.querySelectorAll(".card").forEach(c=>{
-c.classList.remove("selected")
-})
-
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"))
 }
 
-function exportarPDF(){
+function gerarPDF(){
 
 const {jsPDF}=window.jspdf
 const pdf=new jsPDF()
@@ -279,14 +284,7 @@ mus.forEach(n=>{
 
 if(!n) return
 
-const cor=pessoas.find(p=>p.nome===n).cor
-const rgb=hexToRgb(cor)
-
-pdf.setFillColor(rgb.r,rgb.g,rgb.b)
-pdf.roundedRect(15,yMus,70,10,2,2,'F')
-pdf.setTextColor(255,255,255)
 pdf.text(n,18,yMus+7)
-
 yMus+=12
 
 })
@@ -295,14 +293,7 @@ voc.forEach(n=>{
 
 if(!n) return
 
-const cor=pessoas.find(p=>p.nome===n).cor
-const rgb=hexToRgb(cor)
-
-pdf.setFillColor(rgb.r,rgb.g,rgb.b)
-pdf.roundedRect(110,yVoc,70,10,2,2,'F')
-pdf.setTextColor(255,255,255)
 pdf.text(n,113,yVoc+7)
-
 yVoc+=12
 
 })
@@ -312,18 +303,39 @@ contador++
 
 })
 
+return pdf
+
+}
+
+function exportarPDF(){
+
+const pdf=gerarPDF()
 pdf.save("escala_louvor.pdf")
 
 }
 
-function hexToRgb(hex){
+async function compartilharWhats(){
 
-const bigint=parseInt(hex.replace("#",""),16)
+const pdf=gerarPDF()
 
-return{
-r:(bigint>>16)&255,
-g:(bigint>>8)&255,
-b:bigint&255
+const blob=pdf.output("blob")
+
+const file=new File([blob],"escala_louvor.pdf",{type:"application/pdf"})
+
+if(navigator.share){
+
+await navigator.share({
+
+title:"Escala Ministério de Louvor",
+text:"Escala do ministério",
+files:[file]
+
+})
+
+}else{
+
+alert("Seu navegador não suporta compartilhamento direto")
+
 }
 
 }
